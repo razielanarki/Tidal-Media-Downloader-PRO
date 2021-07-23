@@ -381,9 +381,11 @@ namespace TIDALDL_UI.Else
             {
                 var tfile = TagLib.File.Create(filepath);
 
+                Console.WriteLine("-------tfile");
                 tfile.Tag.Album = TidalAlbum.Title;
                 tfile.Tag.Track = (uint)TidalTrack.TrackNumber;
                 tfile.Tag.TrackCount = (uint)TidalAlbum.NumberOfTracks;
+                Console.WriteLine(TidalTrack.Title);
                 tfile.Tag.Title = TidalTrack.Title;
                 tfile.Tag.Disc = (uint)TidalTrack.VolumeNumber;
                 tfile.Tag.DiscCount = (uint)TidalAlbum.NumberOfVolumes;
@@ -392,19 +394,24 @@ namespace TIDALDL_UI.Else
                 tfile.Tag.Performers = Client.GetArtistsList(TidalTrack.Artists);
                 tfile.Tag.Lyrics = lyrics;
 
+                Console.WriteLine("RD");
                 //ReleaseDate
-                if (TidalAlbum.ReleaseDate.IsNotBlank())
+                Console.WriteLine(TidalAlbum.ReleaseDate.Length);
+                if (TidalAlbum.ReleaseDate.IsNotBlank()) 
                     tfile.Tag.Year = (uint)AIGS.Common.Convert.ConverStringToInt(TidalAlbum.ReleaseDate.Split("-")[0]);
 
+                Console.WriteLine("COVER");
                 //Cover
                 var pictures = new Picture[1];
                 pictures[0] = new Picture(NetHelper.DownloadData(TidalAlbum.CoverHighUrl));
                 tfile.Tag.Pictures = pictures;
                 tfile.Save();
+                Console.WriteLine("END");
                 return null;
             }
             catch (Exception e)
             {
+                Console.WriteLine("ERROR");
                 return e.Message;
             }
         }

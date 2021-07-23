@@ -143,13 +143,20 @@ namespace TIDALDL_UI.Else
 
                         //Get lyrics
                         Progress.StatusMsg = "Get lyrics...";
-                        string lyrics = Client.GetLyrics(key, TidalTrack.Title, TidalTrack.Artist == null ? "" : TidalTrack.Artist.Name);
-
+                        string lyrics = "";
+                        try
+                        {
+                            lyrics = Client.GetLyrics(key, TidalTrack.Title, TidalTrack.Artist == null ? "" : TidalTrack.Artist.Name);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Lyrics ERROR");
+                        }
                         //SetMetaData
                         Progress.StatusMsg = "Set metaData...";
                         if (TidalAlbum == null)
                             (Progress.Errmsg, TidalAlbum) = Client.GetAlbum(key, TidalTrack.Album.ID, false).Result;
-                        Progress.Errmsg = Tools.SetMetaData(path, TidalAlbum, TidalTrack, lyrics);
+                        Progress.Errmsg = Tools.SetMetaData(path, TidalAlbum, TidalTrack, "");
                         if (Progress.Errmsg.IsNotBlank())
                         {
                             Progress.Errmsg = "Set metadata failed!" + Progress.Errmsg;
@@ -165,6 +172,7 @@ namespace TIDALDL_UI.Else
             }
             catch(Exception e)
             {
+                Console.WriteLine("Exception - " + e);
                 Progress.Errmsg = "Download failed!" + e.Message;
             }
 

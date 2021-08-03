@@ -21,7 +21,7 @@ namespace TIDALDL_UI.Else
         public ProgressHelper Progress { get; set; }
 
         System.DateTime StartTime { get; set; }
-        public string CurSizeString { get; set; } 
+        public string CurSizeString { get; set; }
         public string TotalSizeString { get; set; }
         public long CountIncreSize { get; set; } = 0;
         public string DownloadSpeedString { get; set; }
@@ -84,7 +84,7 @@ namespace TIDALDL_UI.Else
         #endregion
 
 
-        
+
 
         public void Download()
         {
@@ -107,7 +107,7 @@ namespace TIDALDL_UI.Else
                     (tmpmsg, TidalAlbum) = Client.GetAlbum(key, TidalTrack.Album.ID, false).Result;
                 }
 
-                //Get path 
+                //Get path
                 string path = Tools.GetTrackPath(Settings, TidalTrack, Stream, TidalAlbum, TidalPlaylist);
 
                 //Check if song downloaded already
@@ -143,7 +143,16 @@ namespace TIDALDL_UI.Else
 
                         //Get lyrics
                         Progress.StatusMsg = "Get lyrics...";
-                        string lyrics = Client.GetLyrics(key, TidalTrack.Title, TidalTrack.Artist == null ? "" : TidalTrack.Artist.Name);
+                        string lyrics = "";
+                        try
+                        {
+                            Client.GetLyrics(key, TidalTrack.Title, TidalTrack.Artist == null ? "" : TidalTrack.Artist.Name);
+                        }
+                        catch (Exception e)
+                        {
+                            Progress.Errmsg = "Get lyrics failed!" + e.Message;
+                            goto ERR_RETURN;
+                        }
 
                         //SetMetaData
                         Progress.StatusMsg = "Set metaData...";

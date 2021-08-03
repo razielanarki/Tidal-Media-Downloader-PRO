@@ -1,4 +1,4 @@
-﻿using AIGS.Common;
+using AIGS.Common;
 using AIGS.Helper;
 using Genius;
 using HtmlAgilityPack;
@@ -76,7 +76,7 @@ namespace TIDALDL_UI.Else
                 if (flag.IsNotBlank())
                     flag = $"[{flag}]";
 
-                string artist = FormatPath(album.Artists[0].Name, settings);
+                string artist = FormatPath(string.Join(", ", album.Artists.Select(an_artist => an_artist.Name)), settings);
 
                 string name = settings.AlbumFolderFormat;
                 if (name.IsBlank())
@@ -139,7 +139,7 @@ namespace TIDALDL_UI.Else
             if (playlist != null)
                 number = (playlist.Tracks.IndexOf(track) + 1).ToString().PadLeft(2, '0');
 
-            string artist = FormatPath(track.Artists[0].Name, settings, false);
+            string artist = FormatPath(string.Join(", ", track.Artists.Select(an_artist => an_artist.Name)), settings, false);
 
             //get explicit
             string sexplicit = "";
@@ -247,7 +247,7 @@ namespace TIDALDL_UI.Else
                 number = (playlist.Videos.IndexOf(video) + 1).ToString().PadLeft(2, '0');
 
             //get artist
-            string artist = FormatPath(video.Artists[0].Name, settings, false);
+            string artist = FormatPath(string.Join(", ", video.Artists.Select(an_artist => an_artist.Name)), settings, false);
 
             //get explicit
             string sexplicit = "";
